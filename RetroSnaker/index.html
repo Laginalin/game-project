@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Retro Snaker</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		ul li {
+			list-style: none;
+		}
+		.header {
+			text-align: center;
+		}
+		.container {
+			position: relative;
+			margin: 10px auto;
+			width: 800px;
+			height: 600px;
+			border: 2px solid #000;
+		}
+		.container .map-wrapper {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 600px;
+			height: 600px;
+			overflow: hidden;
+		}
+		.container .map-wrapper .row {
+			height: 20px;
+			overflow: hidden;
+		}
+		.container .map-wrapper .grid {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			box-sizing: border-box;
+			background-size: cover;
+		}
+		.container .pannel-wrapper {
+			position: absolute;
+			right: 0;
+			top: 1px;
+			width: 200px;
+			height: 598px;
+			background-color: #eee;
+		}
+		.container .pannel-wrapper ul li{
+			height: 60px;
+			line-height: 60px;
+			font-size: 25px;
+			text-align: center;
+		}
+		.container .pannel-wrapper ul li.cur {
+			background-color: #080808;
+			color: #fff;
+		}
+		.container .pannel-wrapper ul li span {
+			display: inline-block;
+			box-sizing: border-box;
+			width: 100px;
+			border-right: 1px solid #eee;
+			cursor: pointer;
+		}
+		.container .pannel-wrapper ul li span:last-child {
+			border-right: none;
+		}
+		.container .pannel-wrapper ul li span:hover {
+			background-color: #fff;
+			color: #080808;
+		}
+		.container .map-wrapper .mask {
+			position: absolute;
+			left: 0;
+			top: 0;
+			box-sizing: border-box;
+			padding-top: 200px;
+			width: 600px;
+			height: 600px;
+			text-align: center;
+			font-size: 40px;
+			font-weight: bold;
+			color: #080808;
+			background-color: rgba(255,255,255,0.8);
+		}
+		.footer {
+			margin: 5px auto;
+			text-align: center;
+		}
+		.footer p a {
+			text-decoration: none;
+			color: #080808;
+		}
+		.footer p a:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+	<div class="header">
+		<h1>Retro Snaker</h1>
+		<p>Game Control: Please use up, down, left and right key to control the snake's direction.</p>
+	</div>
+	<div class="container">
+		<div class="map-wrapper" id="map-wrapper"></div>
+		<div class="pannel-wrapper" id="pannel-wrapper">
+			<ul>
+				<li>SCORE</li>
+				<li class="cur" id="score">0</li>
+				<li>Game</li>
+				<li class="cur"><span id="start-btn">START</span><span id="pause-btn">PAUSE</span></li>
+				<li>USERNAME</li>
+				<li class="cur" id="username"></li>
+				<li>HISTORY</li>
+				<li class="cur" id="history"></li>
+		</div>
+	</div>
+	<div class = "footer">
+		<p>If you have any problems,please contact with me: <a href="mailto: laginalin@gmail.com">laginalin@gmail.com</a><p>
+	</div>
+	<script src="scripts/data.js"></script>
+	<script src="scripts/map.js"></script>
+	<script src="scripts/food.js"></script>
+	<script src="scripts/snake.js"></script>
+	<script src="scripts/game.js"></script>
+	<script>
+		var picObj = {
+		Head: ["images/1.png", "images/2.png", "images/3.png", "images/4.png"],
+		Body: ["images/5.png"],
+		Tail: ["images/6.png", "images/7.png", "images/8.png", "images/9.png"],
+		Food: ["images/food.jpg"]
+		};
+		var domObj = {
+			map: document.getElementById("map-wrapper"),
+			score: document.getElementById("score"),
+			begin: document.getElementById("start-btn"),
+			stop: document.getElementById("pause-btn"),
+			user: document.getElementById("username"),
+			history: document.getElementById("history")
+		};
+		var user = new User();
+		var map = new Map();
+		var food = new Food(picObj);
+		var snake = new Snake(picObj);
+		var game = new Game(user, map, food, snake, domObj);
+
+		
+	</script>
+</body>
+</html>
