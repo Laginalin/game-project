@@ -223,6 +223,10 @@ Game.prototype = {
         this.ctx.canvas.onclick = function() {
             me.bird.goUp();
         }
+        $(this.ctx.canvas).on("tap",function(event) {
+            me.bird.goUp();
+            event.preventDefault;
+        })
     },
 
     //检测碰撞
