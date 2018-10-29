@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flappy Bird</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        ul li {
+            list-style: none;
+        }
+        body {
+            user-select: none;
+        }
+        button {
+            outline: none;
+        }
+        .canvas {
+            margin: 10px auto;
+            position: relative;
+            width: 360px;
+            height: 512px;
+            border: 1px solid #000;
+            background: url("images/bg_day.png");
+        }
+
+        .logo-start {
+            width: 180px;
+            height: 200px;
+            position: absolute;
+            left: 90px;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .logo-start img:last-child:hover {
+            cursor: pointer;
+        }
+        .canvas .btn {
+            position: absolute;
+            bottom: 180px;
+            left: 30px;
+            width: 300px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .canvas .btn button{
+            width: 80px;
+            height: 28px;
+            border: none;
+            background: none;
+        }
+        .btn button:hover {
+            cursor: pointer;
+        }
+        .canvas .btn button.menu {
+            background: url("images/button_menu.png");
+        }
+        .canvas .btn button.share {
+            background: url("images/button_share.png");
+        }
+        .canvas canvas {
+            display: block;
+        }
+        .canvas .game-over {
+            position: absolute;
+            top: 100px;
+            left: 60px;
+            width: 240px;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            justify-content: center;
+        }
+        .canvas .game-over .game-over-btn button{
+            width: 116px;
+            height: 70px;
+            border: none;
+            background: none;
+        }
+        .canvas .game-over .score-pannel {
+            position: relative;
+        }
+        .canvas .game-over .score-pannel span {
+            display: inline-block;
+            position: absolute;
+            height: 44px;
+            width: 44px;
+        }
+        .canvas .game-over .score-pannel span.medal {
+            top: 44px;
+            left: 30px;
+        }
+        .canvas .game-over .score-pannel span.score {
+            top: 40px;
+            right: 25px;
+            height: 14px;
+            padding-right: 5px;
+            line-height: 14px;
+            text-align: right;
+            color: #fff;
+            font-size: 18px;
+        }
+        .canvas .game-over .score-pannel span.best {
+            top: 80px;
+            right: 25px;
+            height: 14px;
+            padding-right: 5px;
+            line-height: 14px;
+            text-align: right;
+            color: #fff;
+            font-size: 18px;
+        }
+        .canvas .game-over .score-pannel span.new {
+            top: 58px;
+            left: 130px;
+            height: 14px;
+            background-repeat: no-repeat;
+        }
+        .canvas .game-over .game-over-btn button:hover {
+            cursor: pointer;
+        }
+        .canvas .game-over .game-over-btn button.restart {
+            background: url("images/button_play.png");
+        }
+        .canvas .game-over .game-over-btn button.rank {
+            background: url("images/button_score.png");
+        }
+        .canvas .game-over .game-over-btn button.restart:hover {
+            background: url("images/button_play.png") 0 70px;
+        }
+        /* 菜单栏样式 */
+        .menu-pannel {
+            position: absolute;
+            left: 60px;
+            top: 80px;
+            width: 240px;
+            height: 280px;
+            border: 1.5px solid #222;
+            border-radius: 20px;
+            background-color: #DFDD93;
+            box-shadow: 1px 1px 1px 1px #333;
+            display: none;
+        }
+        .menu-pannel h2 {
+            position: absolute;
+            top: 40px;
+            left: 70px;
+            background-color: #E86101;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px 1px #ec9e9e;
+        }
+        .menu-pannel .bird{
+            position: relative;
+            left: 40px;
+            top: 100px;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+        }
+        .menu-pannel .bird ul {
+            position: absolute;
+            top: -48px;
+            height: 100px;
+        }
+        .menu-pannel .background {
+            position: relative;
+            left: 100px;
+            top: 40px;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+        }
+        .menu-pannel .background ul {
+            position: absolute;
+            top: -33px;
+            left: 7px;
+        }
+        .menu-pannel .background ul li{
+            height: 48px;
+            width: 48px;
+        }
+        .arrow-up {
+            position: absolute;
+            left: 12px;
+            z-index: 10;
+            border-bottom: 10px solid #E86101;
+            border-right: 10px solid transparent;
+            border-left: 10px solid transparent;
+        }
+        .arrow-down {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #E86101;
+        }
+        .menu-pannel .pipe {
+            position: relative;
+            left: 160px;
+            top: -20px;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+        }
+        .menu-pannel .pipe ul {
+            position: absolute;
+            top: -33px;
+            left: 7px;
+        }
+        .menu-pannel .pipe ul li {
+            height: 48px;
+            width: 48px;
+        }
+        .menu-pannel button.ok {
+            position: absolute;
+            bottom: 50px;
+            left: 80px;
+            width: 80px;
+            height: 28px;
+            background: url("images/button_ok.png");
+            border: none;
+        }
+        .menu-pannel .ok:hover {
+            cursor: pointer;
+        }
+        /* 游戏过程中的分数显示 */
+        .canvas .game-score-pannel {
+            position: absolute;
+            top: 100px;
+            left: 0px;
+        }
+        .canvas .game-score-pannel .game-score {
+            text-align: center;
+            width: 360px;
+            height: 80px;
+            line-height: 80px;
+        }
+        /* 排行版显示 */
+        .canvas .rank-pannel {
+            position: absolute;
+            left: 60px;
+            top: 80px;
+            width: 240px;
+            height: 280px;
+            border: 1.5px solid #222;
+            border-radius: 20px;
+            background-color: #DFDD93;
+            box-shadow: 1px 1px 1px 1px #333;
+            display: none;
+        }
+        .canvas .rank-pannel h2 {
+            position: absolute;
+            top: 40px;
+            left: 70px;
+            background-color: #E86101;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px 1px #ec9e9e;
+        }
+        .canvas .rank-pannel table {
+            position: absolute;
+            top: 75px;
+            left: 20px;
+            width: 200px;
+            height: 150px;
+            text-align: center;
+            border-collapse: collapse;
+            color: #fff;
+            font-size: Arial, Helvetica, sans-serif
+        }
+        .canvas .rank-pannel table tr:nth-child(even) {
+            background-color: #E86101;
+        }
+        .canvas .rank-pannel table tr:nth-child(odd) {
+            background-color: #ec9e9e;
+        }
+        .canvas .rank-pannel button.ok {
+            position: absolute;
+            bottom: 20px;
+            left: 80px;
+            width: 80px;
+            height: 28px;
+            background: url("images/button_ok.png");
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas">
+        <div class = "game-start" id = "game-start">
+            <div class = "logo-start">
+                <img src="images/title.png" />
+                <img src="images/tutorial.png" id = "start"/>
+            </div>
+            <div class = "btn">
+                <button id = "menu" class = "menu"></button>
+                <button id ="share" class = "share"></button>
+            </div>
+        </div>
+        <div class = "menu-pannel">
+            <h2>MENU</h2>
+            <div class = "bird">
+                <ul>
+                    <li><img src="images/bird2_1.png"></li>
+                    <li><img src="images/bird0_1.png"></li>
+                    <li><img src="images/bird1_1.png"></li>
+                    <li><img src="images/bird2_1.png"></li>
+                    <li><img src="images/bird0_1.png"></li>
+                </ul>
+                <a href="javascript:void(0)" class = "arrow-up" id = "bird-arrow-up"></a>
+                <a href="javascript:void(0)" class = "arrow-down" id = "bird-arrow-down"></a>
+            </div>
+            <div class = "background">
+                <ul>
+                    <li><img src="images/bg_night.png" width = "30px" height = "30px"></li>
+                    <li><img src="images/bg_day.png" width = "30px" height = "30px"></li>
+                    <li><img src="images/bg_night.png" width = "30px" height = "30px"></li>
+                    <li><img src="images/bg_day.png" width = "30px" height = "30px"></li>
+                </ul>
+                <a href="javascript:void(0)" class = "arrow-up" id = "bg-arrow-up"></a>
+                <a href="javascript:void(0)" class = "arrow-down" id = "bg-arrow-down"></a>
+            </div>
+            <div class = "pipe">
+                <ul>
+                    <li><img src="images/pipe2_down.png" width = "30px" height = "30px"></li>
+                    <li><img src="images/pipe_down.png" width = "30px" height = "30px"></li>
+                    <li><img src="images/pipe2_down.png" width = "30px" height = "30px"></li>
+                    <li><img src="images/pipe_down.png" width = "30px" height = "30px"></li>
+                </ul>
+                <a href="javascript:void(0)" class = "arrow-up" id = "pipe-arrow-up"></a>
+                <a href="javascript:void(0)" class = "arrow-down" id = "pipe-arrow-down"></a>
+            </div>
+            <button class = "ok" id = "menu-ok"></button>
+        </div>
+        <div class = "game-score-pannel">
+            <div class = "game-score" id = "game-score">
+            </div>
+        </div>
+        <canvas id = "myCanvas" width = "360" height = "512"></canvas>
+        <div class = "game-over" id = "game-over">
+            <img src = "images/text_game_over.png" width = "238px"/>
+            <div class = "score-pannel">
+                <span class = "medal"></span>
+                <span class = "score"></span>
+                <span class = "best"></span>
+                <span class = "new"></span>
+                <img src = "images/score_panel.png" />
+            </div>
+            <div class = "game-over-btn">
+                <button id="restart" class = "restart"></button>
+                <button id="rank" class = "rank"></button>
+            </div>
+        </div>
+        <div class = "rank-pannel">
+            <h2>RANK</h2>
+            <table>
+            </table>
+            <button class = "ok" id = "rank-ok"></button>
+        </div>
+    </div>
+    <script src="scripts/jquery-1.12.3.min.js"></script>
+    <script src = "scripts/Game.js"></script>
+    <script src = "scripts/Bird.js"></script>
+    <script src = "scripts/Background.js"></script>
+    <script src = "scripts/Pipe.js"></script>
+    <script src = "scripts/data.js"></script>
+    <script src = "scripts/Main.js"></script>
+</body>
+</html>
